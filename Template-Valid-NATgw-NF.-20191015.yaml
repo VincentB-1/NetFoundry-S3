@@ -1,0 +1,495 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to deploy a VPC Endpoint
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+  GatewayRegistrationKey:
+    Type: String
+    AllowedPattern: '^[A-Z0-9]*$'
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+      - t2.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+    Description: Default is t2.micro.
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Description: Keypair to assocaite with instances
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: NetFoundry Parameters
+        Parameters:
+          - GatewayRegistrationKey
+          - Environment
+      - Label:
+          default: AWS Parameters
+        Parameters:
+          - VPCID
+          - KeyName
+          - InstanceType
+          - SubnetId
+          - SSHLocation
+          - ImageId
+    ParameterLabels:
+      GatewayRegistrationKey:
+        default: Enter the NetFoundry Gateway Registration Key
+  'AWS::CloudFormation::Designer':
+    bd30e593-fa5d-4caa-ba63-c022f224af37:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 90
+      z: 1
+      embeds: []
+    dfdeb2ce-971d-47b3-a8b7-9eca77dd2953:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 4007e72a-b3b8-4b34-8806-6f1286f8d6cf
+        - d1a6322a-a7fb-4156-b518-ab978cdeac15
+      iscontainedinside:
+        - 9e21c9a7-da1f-459b-b7d7-07a8d2d1badc
+    e5603081-f785-4530-ae4b-4b8688dc4d97:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - bd30e593-fa5d-4caa-ba63-c022f224af37
+      dependson:
+        - dfdeb2ce-971d-47b3-a8b7-9eca77dd2953
+    053b0198-a1cb-4130-a77c-55e2c0442bb9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 150
+        'y': 90
+      z: 1
+      embeds: []
+    e991b786-66ce-4c78-8fca-86eab8511171:
+      size:
+        width: 690
+        height: 690
+      position:
+        x: 260
+        'y': 350
+      z: 1
+      embeds:
+        - d1a6322a-a7fb-4156-b518-ab978cdeac15
+        - f9ae8341-b10a-4cec-9754-3846b3cafd1b
+        - 03ad1abd-a1c5-485c-b581-7d81c215381a
+        - d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652
+        - 9e21c9a7-da1f-459b-b7d7-07a8d2d1badc
+        - ef7f55b9-1d5d-458e-8280-661f93977eef
+    d1a6322a-a7fb-4156-b518-ab978cdeac15:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 800
+        'y': 710
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds: []
+      iscontainedinside:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+    f9ae8341-b10a-4cec-9754-3846b3cafd1b:
+      size:
+        width: 240
+        height: 240
+      position:
+        x: 290
+        'y': 710
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds:
+        - 88135684-15c5-4252-9746-efb81a9612d1
+      dependson:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+    03ad1abd-a1c5-485c-b581-7d81c215381a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 800
+        'y': 830
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds: []
+      iscontainedinside:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+        - f9ae8341-b10a-4cec-9754-3846b3cafd1b
+    88135684-15c5-4252-9746-efb81a9612d1:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 320
+        'y': 770
+      z: 3
+      parent: f9ae8341-b10a-4cec-9754-3846b3cafd1b
+      embeds: []
+      isassociatedwith:
+        - 053b0198-a1cb-4130-a77c-55e2c0442bb9
+      dependson:
+        - f9ae8341-b10a-4cec-9754-3846b3cafd1b
+    d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652:
+      size:
+        width: 240
+        height: 240
+      position:
+        x: 590
+        'y': 410
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds:
+        - a0b6b6db-2a71-42dc-9766-fad6837def50
+      iscontainedinside:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+    3e826e7b-00a7-472a-b3ff-9c3386fba6aa:
+      source:
+        id: e991b786-66ce-4c78-8fca-86eab8511171
+      target:
+        id: 053b0198-a1cb-4130-a77c-55e2c0442bb9
+    8c562406-3411-4ee4-a9ab-5f26a80342fb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 300
+      z: 1
+      embeds: []
+      dependson:
+        - 3e826e7b-00a7-472a-b3ff-9c3386fba6aa
+    9e21c9a7-da1f-459b-b7d7-07a8d2d1badc:
+      size:
+        width: 150
+        height: 150
+      position:
+        x: 590
+        'y': 710
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds: []
+      iscontainedinside:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+    16b1930d-3ec3-4d5e-aca6-8c06973d9906:
+      source:
+        id: d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652
+      target:
+        id: 9e21c9a7-da1f-459b-b7d7-07a8d2d1badc
+    ef7f55b9-1d5d-458e-8280-661f93977eef:
+      size:
+        width: 240
+        height: 240
+      position:
+        x: 290
+        'y': 410
+      z: 2
+      parent: e991b786-66ce-4c78-8fca-86eab8511171
+      embeds:
+        - ea5a50ac-5186-48c9-a755-c7414e45a79c
+      iscontainedinside:
+        - e991b786-66ce-4c78-8fca-86eab8511171
+    7cdf1653-211a-40b5-a540-9ebae5170f97:
+      source:
+        id: f9ae8341-b10a-4cec-9754-3846b3cafd1b
+      target:
+        id: ef7f55b9-1d5d-458e-8280-661f93977eef
+    ea5a50ac-5186-48c9-a755-c7414e45a79c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 320
+        'y': 470
+      z: 3
+      parent: ef7f55b9-1d5d-458e-8280-661f93977eef
+      embeds: []
+      iscontainedinside:
+        - ef7f55b9-1d5d-458e-8280-661f93977eef
+    a0b6b6db-2a71-42dc-9766-fad6837def50:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 620
+        'y': 470
+      z: 3
+      parent: d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652
+      embeds: []
+      isassociatedwith:
+        - ea5a50ac-5186-48c9-a755-c7414e45a79c
+      iscontainedinside:
+        - d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652
+Mappings:
+  RegionMap:
+    ap-northeast-1:
+      NFN: ami-0e385683699662a6d
+    ap-northeast-2:
+      NFN: ami-00dc0b54c7a5bffb8
+    ap-south-1:
+      NFN: ami-0a6190b154f9d91cc
+    ap-southeast-1:
+      NFN: ami-0db5e18ee5a5cba38
+    ap-southeast-2:
+      NFN: ami-0f9142af6299c1892
+    ca-central-1:
+      NFN: ami-055a712358d2f6877
+    eu-central-1:
+      NFN: ami-0c99625417d7978cd
+    eu-north-1:
+      NFN: ami-a97ff4d7
+    eu-west-1:
+      NFN: ami-0d71d29eee40c3a4c
+    eu-west-2:
+      NFN: ami-0e44c5d1556e3c30e
+    eu-west-3:
+      NFN: ami-0a99cf0409ed2198e
+    sa-east-1:
+      NFN: ami-0a53307b25ab3ea95
+    us-east-1:
+      NFN: ami-0d8e2d504fba10c07
+    us-east-2:
+      NFN: ami-08b73ab007b78538e
+    us-west-1:
+      NFN: ami-00deeac78f0112f89
+    us-west-2:
+      NFN: ami-0fd95ebb27b12bee0
+Resources:
+  MyVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e991b786-66ce-4c78-8fca-86eab8511171
+  MyPublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone:
+        'Fn::Select':
+          - 0
+          - 'Fn::GetAZs': ''
+      MapPublicIpOnLaunch: true
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ef7f55b9-1d5d-458e-8280-661f93977eef
+  MyPrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone:
+        'Fn::Select':
+          - 0
+          - 'Fn::GetAZs': ''
+      MapPublicIpOnLaunch: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9e21c9a7-da1f-459b-b7d7-07a8d2d1badc
+  IGW:
+    Type: 'AWS::EC2::InternetGateway'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 053b0198-a1cb-4130-a77c-55e2c0442bb9
+  Attachthegateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    DependsOn: MyVPC
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref IGW
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3e826e7b-00a7-472a-b3ff-9c3386fba6aa
+  EIP:
+    Type: 'AWS::EC2::EIP'
+    DependsOn: Attachthegateway
+    Properties:
+      Domain: vpc
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8c562406-3411-4ee4-a9ab-5f26a80342fb
+  NAT:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId:
+        'Fn::GetAtt':
+          - EIP
+          - AllocationId
+      SubnetId:
+        Ref: MyPublicSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ea5a50ac-5186-48c9-a755-c7414e45a79c
+  RoutingTablePrivate:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref MyVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d5f19b30-3e87-4c3e-a0fa-fd82fc1f8652
+  mySubnetRouteTableAssociationPrivate:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref MyPrivateSubnet
+      RouteTableId: !Ref RoutingTablePrivate
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 16b1930d-3ec3-4d5e-aca6-8c06973d9906
+  AddthedefaultroutePrivate:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref RoutingTablePrivate
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NAT
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a0b6b6db-2a71-42dc-9766-fad6837def50
+  RoutingTable:
+    Type: 'AWS::EC2::RouteTable'
+    DependsOn: MyVPC
+    Properties:
+      VpcId: !Ref MyVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f9ae8341-b10a-4cec-9754-3846b3cafd1b
+  mySubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref MyPublicSubnet
+      RouteTableId: !Ref RoutingTable
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7cdf1653-211a-40b5-a540-9ebae5170f97
+  Addthedefaultroute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: RoutingTable
+    Properties:
+      RouteTableId: !Ref RoutingTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 88135684-15c5-4252-9746-efb81a9612d1
+  TheVPCEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      RouteTableIds:
+        - !Ref RoutingTable
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      VpcId: !Ref MyVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 03ad1abd-a1c5-485c-b581-7d81c215381a
+  SSHSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref SSHLocation
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d1a6322a-a7fb-4156-b518-ab978cdeac15
+  NFNEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    DependsOn: NAT
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      ImageId: !FindInMap 
+        - RegionMap
+        - !Ref 'AWS::Region'
+        - NFN
+      SubnetId: !Ref MyPrivateSubnet
+      SecurityGroupIds:
+        - !Ref SSHSecurityGroup
+      SourceDestCheck: false
+      Tags:
+        - Key: Name
+          Value: NFN Gateway
+      UserData: !Base64 
+        'Fn::Sub': >
+          #!/bin/bash -xe
+
+          # Start logging
+
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s
+          2>/dev/console) 2>&1
+
+          # Register Gateway
+
+          echo "starting registration"
+
+          /opt/dispersive/dvn/registergw --regurl 
+          https://registration.${Environment}.netfoundry.io:18443/registration
+          ${GatewayRegistrationKey}
+
+          if [ $? = 0 ]; then
+            echo "Successfully Registered"
+            # Respond to Cloudformation Stack with Success status
+            curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "SUCCESS","Reason" : "Configuration Complete","UniqueId" : "ID0","Data" : "Gateway Successfully Registered."}' "${NFNWaitHandle}"
+          fi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: dfdeb2ce-971d-47b3-a8b7-9eca77dd2953
+  NFNWaitHandle:
+    Type: 'AWS::CloudFormation::WaitConditionHandle'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: bd30e593-fa5d-4caa-ba63-c022f224af37
+  NFNWaitCondition:
+    Type: 'AWS::CloudFormation::WaitCondition'
+    DependsOn: NFNEC2Instance
+    Properties:
+      Handle: !Ref NFNWaitHandle
+      Timeout: '240'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e5603081-f785-4530-ae4b-4b8688dc4d97
+Outputs:
+  VpcEndpointName:
+    Description: The VPC Endoind ID
+    Value: !Ref TheVPCEndpoint
